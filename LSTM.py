@@ -44,7 +44,7 @@ class LSTMRNN(object):
             self.train_op = tf.train.AdamOptimizer(LR).minimize(self.cost)
 
     def add_input_layer(self,):
-        l_in_x = tf.reshape(self.xs, [-1, self.input_size], name='2_2D')  # (batch*n_step, in_size)
+        l_in_x = tf.reshape(self.xs, [-1, self.input_size], name='to_2D')  # (batch*n_step, in_size)
         # Ws (in_size, cell_size)
         Ws_in = self._weight_variable([self.input_size, self.cell_size])
         # bs (cell_size, )
@@ -53,7 +53,7 @@ class LSTMRNN(object):
         with tf.name_scope('Wx_plus_b'):
             l_in_y = tf.matmul(l_in_x, Ws_in) + bs_in
         # reshape l_in_y ==> (batch, n_steps, cell_size)
-        self.l_in_y = tf.reshape(l_in_y, [-1, self.n_steps, self.cell_size], name='2_3D')
+        self.l_in_y = tf.reshape(l_in_y, [-1, self.n_steps, self.cell_size], name='to_3D')
 
     def add_cell(self):
         lstm_cell = tf.contrib.rnn.BasicLSTMCell(self.cell_size, forget_bias=1.0, state_is_tuple=True)
@@ -64,7 +64,7 @@ class LSTMRNN(object):
 
     def add_output_layer(self):
         # shape = (batch * steps, cell_size)
-        l_out_x = tf.reshape(self.cell_outputs, [-1, self.cell_size], name='2_2D')
+        l_out_x = tf.reshape(self.cell_outputs, [-1, self.cell_size], name='to_2D')
         Ws_out = self._weight_variable([self.cell_size, self.output_size])
         bs_out = self._bias_variable([self.output_size, ])
         # shape = (batch * steps, output_size)
@@ -81,10 +81,7 @@ class LSTMRNN(object):
             name='losses')
             
         with tf.name_scope('average_cost'):
-            self.cost = tf.div(
-                tf.reduce_sum(losses, name='losses_sum'),
-                self.batch_size,
-                name='average_cost')
+            self.cost = tf.div(tf.reduce_sum(losses, name='losses_sum'), self.batch_size, name='average_cost')
             tf.summary.scalar('cost', self.cost)
 
     @staticmethod
