@@ -9,7 +9,7 @@ BATCH_SIZE = 50
 INPUT_SIZE = 1
 OUTPUT_SIZE = 1
 CELL_SIZE = 10
-LR = 0.006
+LR = 0.005
 
 
 def get_batch():
