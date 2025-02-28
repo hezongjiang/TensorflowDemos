@@ -13,17 +13,19 @@ plt.show()
 train_images = tf.keras.utils.normalize(train_images, axis=1)
 test_images = tf.keras.utils.normalize(test_images, axis=1)
 
-model = tf.keras.models.Sequential()
-model.add(tf.keras.layers.Flatten(input_shape=(28, 28)))
-model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))
-model.add(tf.keras.layers.Dropout(0.2))
-model.add(tf.keras.layers.Dense(10, activation=tf.nn.softmax))
+# 构建模型
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Flatten(input_shape=(28, 28)),
+    tf.keras.layers.Dense(128, activation=tf.nn.relu),
+    tf.keras.layers.Dropout(0.1),
+    tf.keras.layers.Dense(10, activation=tf.nn.softmax)
+])
 
 # 使用 Keras Model.compile 配置和编译模型
 model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True), metrics=['accuracy'])
 
 # training
-model.fit(train_images, train_labels, epochs=3)
+model.fit(train_images, train_labels, epochs=5)
 
 val_loss, val_acc = model.evaluate(test_images, test_labels)
 print(val_loss)
