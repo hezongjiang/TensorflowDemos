@@ -181,7 +181,7 @@ model = Sequential([
     layers.Dropout(0.2),
     layers.Flatten(),
     layers.Dense(128, activation='relu'),
-    layers.Dense(num_classes, activation="softmax")
+    layers.Dense(num_classes)
 ])
 
 # 重新训练
